@@ -13,6 +13,9 @@ class PrebidCacheContainerConfig(private val redisHost: String, private val aero
     fun getBaseAerospikeConfig(allowExternalUuid: String, aerospikeNamespace: String = NAMESPACE): Map<String, String> =
         getBaseConfig(allowExternalUuid) + getAerospikeConfig(aerospikeNamespace)
 
+    fun getBaseMemcacheConfig(allowExternalUuid: String, maxCacheSize: String = "100"): Map<String, String> =
+            getBaseConfig(allowExternalUuid) + getMemcacheConfig(maxCacheSize)
+
     fun getCacheExpiryConfig(minExpiry: String = "15", maxExpiry: String = "28800"): Map<String, String> =
         mapOf(
             "cache.min.expiry" to minExpiry,
@@ -55,6 +58,11 @@ class PrebidCacheContainerConfig(private val redisHost: String, private val aero
             "spring.aerospike.max_backoff" to "1000",
             "spring.aerospike.max_retry" to "3",
             "spring.aerospike.namespace" to aerospikeNamespace
+        )
+
+    private fun getMemcacheConfig(maxCacheSize: String): Map<String, String> =
+        mapOf(
+            "spring.memcache.maxObjects" to maxCacheSize
         )
 
     private fun getBaseConfig(allowExternalUuid: String): Map<String, String> =
